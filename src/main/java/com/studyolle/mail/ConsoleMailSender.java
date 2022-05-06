@@ -1,4 +1,4 @@
-package com.studyolle;
+package com.studyolle.mail;
 
 import java.io.InputStream;
 import javax.mail.internet.MimeMessage;

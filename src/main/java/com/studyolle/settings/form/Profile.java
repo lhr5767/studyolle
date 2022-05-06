@@ -1,4 +1,4 @@
-package com.studyolle.settings;
+package com.studyolle.settings.form;
 
 import com.studyolle.domain.Account;
 import lombok.Data;
@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 @Data
-@NoArgsConstructor
+//@NoArgsConstructor
 public class Profile {
 
     @Length(max = 20)
@@ -20,11 +20,11 @@ public class Profile {
 
     private String profileImage;
 
-    public Profile(Account account) {
-        this.bio = account.getBio();
-        this.url = account.getUrl();
-        this.occupation = account.getOccupation();
-        this.location = account.getLocation();
-        this.profileImage = account.getProfileImage();
-    }
+//    public Profile(Account account) {
+//        this.bio = account.getBio();
+//        this.url = account.getUrl();
+//        this.occupation = account.getOccupation();
+//        this.location = account.getLocation();
+//        this.profileImage = account.getProfileImage();
+//    }
 }
