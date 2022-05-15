@@ -92,6 +92,14 @@
       <version>2.3.6</version>
     </dependency>
 
+    <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>42.3.5</version>
+    </dependency>
+
+
 
 
   </dependencies>
