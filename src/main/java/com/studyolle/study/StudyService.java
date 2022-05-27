@@ -2,7 +2,9 @@ package com.studyolle.study;
 
 import com.studyolle.domain.Account;
 import com.studyolle.domain.Study;
+import com.studyolle.domain.Tag;
 import com.studyolle.study.form.StudyDescriptionForm;
+import com.studyolle.tag.TagRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.access.AccessDeniedException;
@@ -16,6 +18,7 @@ public class StudyService {
 
     private final StudyRepository studyRepository;
     private final ModelMapper modelMapper;
+    private final TagRepository tagRepository;
 
     public Study createNewStudy(Study study, Account account) {
         Study newStudy = studyRepository.save(study);
@@ -58,4 +61,11 @@ public class StudyService {
     }
 
 
+    public void addTag(Study study, Tag tag) {
+        study.getTags().add(tag);
+    }
+
+    public Study getStudyToUpdateTag(Account account, String path) {
+        Study study = studyRepository.findAccountWithTagsByPath(path);
+    }
 }

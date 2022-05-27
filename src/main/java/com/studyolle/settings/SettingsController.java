@@ -11,6 +11,7 @@ import com.studyolle.settings.form.*;
 import com.studyolle.settings.validator.NicknameValidator;
 import com.studyolle.settings.validator.PasswordFormValidator;
 import com.studyolle.tag.TagRepository;
+import com.studyolle.tag.TagService;
 import com.studyolle.zone.ZoneRepository;
 import java.util.List;
 import java.util.Optional;
@@ -54,6 +55,7 @@ public class SettingsController {
     private final TagRepository tagRepository;
     private final ObjectMapper objectMapper;
     private final ZoneRepository zoneRepository;
+    private final TagService tagService;
 
     @InitBinder("passwordForm")
     public void passwordInitBinder(WebDataBinder webDataBinder) {
@@ -166,14 +168,11 @@ public class SettingsController {
     @PostMapping("/settings/tags/add")
     @ResponseBody
     public ResponseEntity addTag(@CurrentUser Account account, @RequestBody TagForm tagForm) {
-        String title = tagForm.getTagTitle();
+      //  String title = tagForm.getTagTitle();
 //        Tag tag = tagRepository.findByTitle(title).orElseGet(() -> tagRepository.save(Tag.builder()
 //            .tagTitle(tagForm.getTagTitle())
 //            .build())); Optional 로 받을때
-        Tag tag = tagRepository.findByTagTitle(title);
-        if(tag == null) {
-            tag = tagRepository.save(Tag.builder().tagTitle(title).build());
-        }
+        Tag tag = tagService.findOrCreateNew(tagForm.getTagTitle());
 
         accountService.addTag(account,tag);
         return ResponseEntity.ok().build();

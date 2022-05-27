@@ -118,6 +118,9 @@ public class StudySettingsController {
     public ResponseEntity addTag(@CurrentUser Account account, @PathVariable String path,
                                 @RequestBody TagForm tagForm) {
        Study study = studyService.getStudyToUpdateTag(account,path);
+       Tag tag = tagService.findOrCreateNew(tagForm.getTagTitle());
+       studyService.addTag(study,tag);
+       return ResponseEntity.ok().build();
 
     }
 
