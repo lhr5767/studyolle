@@ -6,10 +6,12 @@ import com.studyolle.account.CurrentUser;
 import com.studyolle.domain.Account;
 import com.studyolle.domain.Study;
 import com.studyolle.domain.Tag;
+import com.studyolle.domain.Zone;
 import com.studyolle.settings.form.TagForm;
 import com.studyolle.study.form.StudyDescriptionForm;
 import com.studyolle.tag.TagRepository;
 import com.studyolle.tag.TagService;
+import com.studyolle.zone.ZoneRepository;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -34,6 +36,7 @@ public class StudySettingsController {
     private final TagRepository tagRepository;
     private final ObjectMapper objectMapper;
     private final TagService tagService;
+    private final ZoneRepository zoneRepository;
 
     @GetMapping("/description")
     public String viewStudySetting(@CurrentUser Account account, @PathVariable String path, Model model){
@@ -121,8 +124,39 @@ public class StudySettingsController {
        Tag tag = tagService.findOrCreateNew(tagForm.getTagTitle());
        studyService.addTag(study,tag);
        return ResponseEntity.ok().build();
-
     }
+
+    @PostMapping("/tags/remove")
+    @ResponseBody
+    public ResponseEntity removeTag(@CurrentUser Account account, @PathVariable String path,
+                                    @RequestBody TagForm tagForm) {
+        Study study = studyService.getStudyToUpdateTag(account, path);
+        Tag tag = tagRepository.findByTagTitle(tagForm.getTagTitle());
+        if(tag == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        studyService.removeTag(study,tag);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/zones")
+    public String studyZonesForm(@CurrentUser Account account, @PathVariable String path, Model model)
+        throws JsonProcessingException {
+        Study study = studyService.getStudyToUpdate(account, path);
+        model.addAttribute(account);
+        model.addAttribute(study);
+        model.addAttribute("zones",study.getZones().stream()
+            .map(Zone::toString).collect(Collectors.toList()));
+
+        List<String> allZones = zoneRepository.findAll().stream().map(Zone::toString)
+            .collect(Collectors.toList());
+        model.addAttribute("whitelist",objectMapper.writeValueAsString(allZones));
+        return "study/settings/zones";
+    }
+
+    @PostMapping("/zones/add")
+
 
     private String getPath(String path) {
         return URLEncoder.encode(path, StandardCharsets.UTF_8);

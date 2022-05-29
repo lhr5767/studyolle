@@ -67,5 +67,24 @@ public class StudyService {
 
     public Study getStudyToUpdateTag(Account account, String path) {
         Study study = studyRepository.findAccountWithTagsByPath(path);
+        checkIfExistingStudy(path,study);
+        checkIfManager(account,study);
+        return study;
+    }
+
+    private void checkIfExistingStudy(String path, Study study) {
+        if (study == null) {
+            throw new IllegalArgumentException(path + "에 해당하는 스터디가 없습니다");
+        }
+    }
+
+    private void checkIfManager(Account account, Study study) {
+        if (!study.isManagedBy(account)) {
+            throw new AccessDeniedException("해당 기능을 사용할 수 없습니다");
+        }
+    }
+
+    public void removeTag(Study study, Tag tag) {
+        study.getTags().remove(tag);
     }
 }
