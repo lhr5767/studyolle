@@ -8,6 +8,7 @@ import com.studyolle.domain.Study;
 import com.studyolle.domain.Tag;
 import com.studyolle.domain.Zone;
 import com.studyolle.settings.form.TagForm;
+import com.studyolle.settings.form.ZoneForm;
 import com.studyolle.study.form.StudyDescriptionForm;
 import com.studyolle.tag.TagRepository;
 import com.studyolle.tag.TagService;
@@ -156,6 +157,34 @@ public class StudySettingsController {
     }
 
     @PostMapping("/zones/add")
+    @ResponseBody
+    public ResponseEntity addZone(@CurrentUser Account account, @PathVariable String path,
+                                  @RequestBody ZoneForm zoneForm) {
+        Study study = studyService.getStudyToUpdateZone(account,path);
+        Zone zone = zoneRepository.findByCityAndProvince(zoneForm.getCityName(),
+            zoneForm.getProvinceName());
+        if (zone == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        studyService.addZone(study, zone);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/zones/remove")
+    @ResponseBody
+    public ResponseEntity removeZone(@CurrentUser Account account, @PathVariable String path,
+                                     @RequestBody ZoneForm zoneForm ) {
+        Study study = studyService.getStudyToUpdateZone(account, path);
+        Zone zone = zoneRepository.findByCityAndProvince(zoneForm.getCityName(),
+            zoneForm.getProvinceName());
+        if(zone == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        studyService.removeZone(study,zone);
+        return ResponseEntity.ok().build();
+    }
 
 
     private String getPath(String path) {
