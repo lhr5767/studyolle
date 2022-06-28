@@ -27,6 +27,6 @@
   </div>
 </div>
 <script th:replace="fragments.html :: ajax-csrf-header"></script>
-<script th:replace="fragments.html :: update-zones(baseUrl='/settings/zones')"></script>
+<script th:replace="fragments.html :: update-tags(baseUrl='/study/' + ${study.path} + '/settings/tags')"></script>
 </body>
 </html>
